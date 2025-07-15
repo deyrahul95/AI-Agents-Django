@@ -9,10 +9,11 @@ def get_openai_model(model="llama3.2") -> ChatOpenAI:
         model: model you want to load default is 'llama:3.2'
     """
 
-    return ChatOpenAI(
+    model = ChatOpenAI(
         model=model,
         temperature=0,
         max_retries=2,
         api_key=settings.OPENAI_API_KEY,
         base_url=settings.OPENAI_BASE_URL,
     )
+    return model
