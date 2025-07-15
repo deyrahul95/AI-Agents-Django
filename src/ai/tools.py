@@ -1,14 +1,27 @@
 from langchain_core.tools import tool
+from langchain_core.runnables.config import RunnableConfig
 
 from documents.models import Document
 
 
 # List all active document
 @tool
-def list_documents():
-    """Get a list of active documents"""
-    query_set = Document.objects.filter(active=True)
+def list_documents(config: RunnableConfig):
+    """Get a list of active documents
+
+    Params:
+       config: configuration needed as Runnable Config
+    """
+
+    metadata = config.get("metadata") or config.get("configurable")
+    user_id = metadata.get("user_id") if metadata is not None else None
+
+    if user_id is None:
+        raise Exception("Invalid request for user.")
+
+    query_set = Document.objects.filter(owner_id=user_id, active=True)
     response_data = []
+
     for obj in query_set:
         response_data.append(
             {
@@ -21,13 +34,27 @@ def list_documents():
 
 
 @tool
-def get_document(document_id: int):
+def get_document(document_id: int, config: RunnableConfig):
     """Get a single document by its respective id
 
     Params:
         document_id: The unique identifier of document
+        config: configuration needed as Runnable Config
     """
-    obj = Document.objects.get(id=document_id, active=True)
+
+    metadata = config.get("metadata") or config.get("configurable")
+    user_id = metadata.get("user_id") if metadata is not None else None
+
+    if user_id is None:
+        raise Exception("Invalid request for user.")
+
+    try:
+        obj = Document.objects.get(id=document_id, owner_id=user_id, active=True)
+    except Document.DoesNotExist:
+        raise Exception("Document not found, try again")
+    except Exception:
+        raise Exception("Invalid request for document details, try again")
+
     response_data = {
         "id": obj.id,  # type: ignore
         "title": obj.title,
