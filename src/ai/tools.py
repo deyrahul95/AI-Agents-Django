@@ -31,6 +31,7 @@ def list_documents(config: RunnableConfig):
                 "id": obj.id,  # type: ignore
                 "title": obj.title,
                 "content": obj.content,
+                "updated_at": obj.updated_at,
             }
         )
     return response_data
@@ -42,7 +43,7 @@ def get_document(document_id: int, config: RunnableConfig):
 
     Params:
         document_id: The unique identifier of document
-        config: configuration needed as Runnable Config
+        config: The configuration needed as Runnable Config
     """
 
     configurable = config.get("configurable") or config.get("metadata")
@@ -62,5 +63,38 @@ def get_document(document_id: int, config: RunnableConfig):
         "id": obj.id,  # type: ignore
         "title": obj.title,
         "content": obj.content,
+        "updated_at": obj.updated_at,
+    }
+    return response_data
+
+
+@tool
+def create_document(title: str, content: str, config: RunnableConfig):
+    """Create and save a new document into database with title, content for specific user.
+
+    Params:
+        title: The document title string with max length of 120 characters
+        content: The document content in long form of string with max length of 500 characters
+        config: The configuration needed as Runnable Config
+    """
+
+    configurable = config.get("configurable") or config.get("metadata")
+    user_id = configurable.get("user_id") if configurable is not None else None
+
+    if user_id is None:
+        raise Exception("Invalid request for user.")
+
+    try:
+        obj = Document.objects.create(
+            title=title, content=content, owner_id=user_id, active=True
+        )
+    except Exception:
+        raise Exception("Failed to add document into DB, try again")
+
+    response_data = {
+        "id": obj.id,  # type: ignore
+        "title": obj.title,
+        "content": obj.content,
+        "created_at": obj.created_at,
     }
     return response_data
