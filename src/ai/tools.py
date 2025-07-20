@@ -70,12 +70,12 @@ def get_document(document_id: int, config: RunnableConfig):
 
 @tool
 def create_document(title: str, content: str, config: RunnableConfig):
-    """Create and save a new document into database with title, content for specific user.
+    """Create and save a new document into database for specific user.
 
     Params:
-        title: The document title string with max length of 120 characters
-        content: The document content in long form of string with max length of 500 characters
-        config: The configuration needed as Runnable Config
+        title: The document title string with max length of 120 characters (Required)
+        content: The document content in long form of string with max length of 500 characters (Required)
+        config: The configuration needed as Runnable Config (Required)
     """
 
     configurable = config.get("configurable") or config.get("metadata")
@@ -88,6 +88,7 @@ def create_document(title: str, content: str, config: RunnableConfig):
         obj = Document.objects.create(
             title=title, content=content, owner_id=user_id, active=True
         )
+        obj.save()
     except Exception:
         raise Exception("Failed to add document into DB, try again")
 
