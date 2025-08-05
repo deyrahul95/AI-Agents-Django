@@ -3,14 +3,19 @@ from langchain_core.runnables.config import RunnableConfig
 
 from documents.models import Document
 
+from typing import Dict, List
+
 
 # List all active document
 @tool
-def list_documents(config: RunnableConfig):
-    """Get a list of most recent 5 active documents
+def list_documents(config: RunnableConfig) -> List:
+    """Get a list of most recent 5 active documents from database
 
-    Params:
-       config: configuration needed as Runnable Config
+    Args:
+       config(RunnableConfig): configuration needed as Runnable Config (Required)
+
+    Returns:
+        A list of dict that document id, title, content and updated_at timestamp
     """
 
     limit: int = 5
@@ -38,12 +43,15 @@ def list_documents(config: RunnableConfig):
 
 
 @tool
-def get_document(document_id: int, config: RunnableConfig):
-    """Get a single document by its respective id
+def get_document(document_id: int, config: RunnableConfig) -> Dict:
+    """Retrieve a single document from database by its respective id
 
-    Params:
-        document_id: The unique identifier of document
-        config: The configuration needed as Runnable Config
+    Args:
+        document_id(int): The unique identifier of document (Required)
+        config(RunnableConfig): The configuration needed as Runnable Config (Required)
+
+    Returns:
+        A dict that contains document id, title, content and updated_at timestamp
     """
 
     configurable = config.get("configurable") or config.get("metadata")
@@ -69,13 +77,16 @@ def get_document(document_id: int, config: RunnableConfig):
 
 
 @tool
-def create_document(title: str, content: str, config: RunnableConfig):
+def create_document(title: str, content: str, config: RunnableConfig) -> Dict:
     """Create and save a new document into database for specific user.
 
-    Params:
-        title: The document title string with max length of 120 characters (Required)
-        content: The document content in long form of string with max length of 500 characters (Required)
-        config: The configuration needed as Runnable Config (Required)
+    Args:
+        title(str): The document title string with max length of 120 characters (Required)
+        content(str): The document content in long form of string with max length of 500 characters (Required)
+        config(RunnableConfig): The configuration needed as Runnable Config (Required)
+
+    Returns:
+        A dict that contains newly created document id, title, content and created_at timestamp
     """
 
     configurable = config.get("configurable") or config.get("metadata")

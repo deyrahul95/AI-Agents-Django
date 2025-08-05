@@ -2,11 +2,14 @@ from django.conf import settings
 from langchain_openai import ChatOpenAI
 
 
-def get_openai_model(model="llama3.2") -> ChatOpenAI:
+def get_openai_model(model="qwen3:1.7b") -> ChatOpenAI:
     """Get an open ai model
 
-    Params:
-        model: model you want to load default is 'llama:3.2'
+    Args:
+        model: model you want to load default is 'qwen3:1.7b'
+
+    Returns:
+        An instance of ChatOpenAI
     """
 
     model = ChatOpenAI(
