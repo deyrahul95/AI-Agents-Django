@@ -2,7 +2,7 @@ from django.conf import settings
 from langchain_openai import ChatOpenAI
 
 
-def get_openai_model(model="qwen3:1.7b") -> ChatOpenAI:
+def get_openai_model(model: str = "qwen3:1.7b") -> ChatOpenAI:
     """Get an open ai model
 
     Args:
@@ -12,11 +12,11 @@ def get_openai_model(model="qwen3:1.7b") -> ChatOpenAI:
         An instance of ChatOpenAI
     """
 
-    model = ChatOpenAI(
+    openai_model = ChatOpenAI(
         model=model,
         temperature=0,
         max_retries=2,
         api_key=settings.OPENAI_API_KEY,
         base_url=settings.OPENAI_BASE_URL,
     )
-    return model
+    return openai_model

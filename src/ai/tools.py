@@ -11,7 +11,7 @@ from typing import Dict, List
 def list_documents(config: RunnableConfig) -> List:
     """Get a list of most recent 5 active documents from database
 
-    Args:
+    Params:
        config(RunnableConfig): configuration needed as Runnable Config (Required)
 
     Returns:
@@ -46,7 +46,7 @@ def list_documents(config: RunnableConfig) -> List:
 def get_document(document_id: int, config: RunnableConfig) -> Dict:
     """Retrieve a single document from database by its respective id
 
-    Args:
+    Params:
         document_id(int): The unique identifier of document (Required)
         config(RunnableConfig): The configuration needed as Runnable Config (Required)
 
@@ -80,7 +80,7 @@ def get_document(document_id: int, config: RunnableConfig) -> Dict:
 def create_document(title: str, content: str, config: RunnableConfig) -> Dict:
     """Create and save a new document into database for specific user.
 
-    Args:
+    Params:
         title(str): The document title string with max length of 120 characters (Required)
         content(str): The document content in long form of string with max length of 500 characters (Required)
         config(RunnableConfig): The configuration needed as Runnable Config (Required)
